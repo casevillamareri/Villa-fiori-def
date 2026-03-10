@@ -948,11 +948,11 @@
                         <td style="color: var(--color-danger);">-€${commission}</td>
                         <td style="color: var(--color-success); font-weight: 600;">€${netIncome}</td>
                         <td>
+                                                <button class="btn btn-secondary btn-small" onclick="editBooking(${booking.id})">✏️</button>
                             <button class="btn btn-danger btn-small" onclick="deleteBooking(${booking.id})">🗑️</button>
                         </td>
                     </tr>
                 `;
-                                    <button class="btn btn-secondary btn-small" onclick="editBooking(${booking.id})">✏️</button>
                     tbody.innerHTML += row;
             });
         }
