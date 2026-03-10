@@ -797,6 +797,7 @@
                 <div class="export-section">
                     <button class="btn btn-primary" onclick="exportToExcel()">📥 Esporta Excel</button>
                     <button class="btn btn-secondary" onclick="printReport()">🖨️ Stampa Report</button>
+                                    <button class="btn btn-primary" onclick="exportToICal()">📤 Esporta iCal</button>
                 </div>
             </div>
         </div>
@@ -1211,6 +1212,36 @@
             const a = document.createElement('a');
             a.href = url;
             a.download = 'prenotazioni_casa_vacanze.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+                function exportToICal() {
+            let icalContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Villa Fiori//Gestionale//IT\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:Villa Fiori\nX-WR-TIMEZONE:Europe/Rome\n';
+            
+            bookings.forEach(booking => {
+                const uid = `${booking.id}@villafiori`;
+                const dtstart = booking.checkIn.replace(/-/g, '');
+                const dtend = booking.checkOut.replace(/-/g, '');
+                const summary = `${booking.guestName} (${booking.platform})`;
+                
+                icalContent += `BEGIN:VEVENT\n`;
+                icalContent += `UID:${uid}\n`;
+                icalContent += `DTSTART;VALUE=DATE:${dtstart}\n`;
+                icalContent += `DTEND;VALUE=DATE:${dtend}\n`;
+                icalContent += `SUMMARY:${summary}\n`;
+                icalContent += `DESCRIPTION:Prenotazione ${booking.platform} - €${booking.price}\n`;
+                icalContent += `STATUS:CONFIRMED\n`;
+                icalContent += `END:VEVENT\n`;
+            });
+            
+            icalContent += 'END:VCALENDAR';
+            
+            const blob = new Blob([icalContent], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'villa-fiori-calendar.ics';
             a.click();
             window.URL.revokeObjectURL(url);
         }
