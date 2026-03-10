@@ -952,7 +952,8 @@
                         </td>
                     </tr>
                 `;
-                tbody.innerHTML += row;
+                                    <button class="btn btn-secondary btn-small" onclick="editBooking(${booking.id})">✏️</button>
+                    tbody.innerHTML += row;
             });
         }
 
@@ -960,7 +961,34 @@
             if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
                 bookings = bookings.filter(b => b.id !== id);
                 renderBookingsTable();
-                updateDashboard();
+                
+                        function editBooking(id) {
+            const booking = bookings.find(b => b.id === id);
+            if (!booking) return;
+            
+            // Popola il form con i dati della prenotazione
+            document.getElementById('guestName').value = booking.guestName;
+            document.getElementById('guestEmail').value = booking.guestEmail || '';
+            document.getElementById('guestPhone').value = booking.guestPhone || '';
+            document.getElementById('numGuests').value = booking.numGuests || 2;
+            document.getElementById('checkIn').value = booking.checkIn;
+            document.getElementById('checkOut').value = booking.checkOut;
+            document.getElementById('platform').value = booking.platform;
+            document.getElementById('price').value = booking.price;
+            document.getElementById('cleaning').value = booking.cleaning;
+            document.getElementById('notes').value = booking.notes || '';
+            
+            // Ricalcola il profitto
+            calculateProfit();
+            
+            // Elimina la prenotazione originale
+            deleteBooking(id);
+            
+            // Scroll al form
+            document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        updateDashboard();
                 alert('✅ Prenotazione eliminata!');
             }
         }
