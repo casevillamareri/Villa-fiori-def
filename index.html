@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Villa Fiori</title>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-success: #059669;
+            --color-warning: #d97706;
+            --color-danger: #dc2626;
+            --color-bg: #f8fafc;
+            --color-surface: #ffffff;
+            --color-border: #e2e8f0;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--color-surface);
+            border-bottom: 2px solid var(--color-primary);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: var(--color-primary);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--color-text-light);
+            font-size: 14px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--color-border);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .stat-subtext {
+            font-size: 13px;
+            color: var(--color-text-light);
+            margin-top: 8px;
+        }
+
+        .form-card {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            padding: 10px 14px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            background: var(--color-surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        thead {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: rgba(37, 99, 235, 0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-booking {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-airbnb {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-diretta {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .notification-badge {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--color-danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .upcoming-checkins {
+            background: #fef3c7;
+            border-left: 4px solid var(--color-warning);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 12px;
+            background: var(--color-border);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.occupied {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .calendar-day.synced {
+            background: #9333ea;
+            color: white;
+            border-color: #9333ea;
+        }
+
+        .calendar-day.empty {
+            background: #f1f5f9;
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background: var(--color-surface);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .month-selector h3 {
+            font-size: 20px;
+            color: var(--color-primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: var(--color-primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--color-text-light);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: var(--color-danger);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--color-success);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .export-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+            }
+
+            .calendar-day {
+                font-size: 11px;
+                padding: 4px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🏠 Gestionale Villa Fiori</h1>
+            <p class="subtitle">Sistema completo di gestione prenotazioni e finanza</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">
+                <span class="notification-badge">
+                    📊 Dashboard
+                    <span class="notification-count" id="dashboardNotifications" style="display: none;"></span>
+                </span>
+            </button>
+            <button class="tab-btn" onclick="showTab('prenotazioni')">📅 Prenotazioni</button>
+            <button class="tab-btn" onclick="showTab('calendario')">🗓️ Calendario</button>
+            <button class="tab-btn" onclick="showTab('finanza')">💰 Finanza</button>
+            <button class="tab-btn" onclick="showTab('report')">📈 Report</button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+            <div id="upcomingCheckinsAlert" class="upcoming-checkins" style="display: none;">
+                <h4 style="margin-bottom: 10px; color: var(--color-warning);">⚠️ Check-in Imminenti</h4>
+                <div id="upcomingCheckinsList"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Notti Occupate</div>
+                    <div class="stat-value" id="totalNights">0</div>
+                    <div class="stat-subtext">su 365 giorni disponibili</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tasso Occupazione</div>
+                    <div class="stat-value" id="occupancyRate">0%</div>
+                    <div class="stat-subtext">Media anno corrente</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Incasso Lordo</div>
+                    <div class="stat-value" id="totalRevenue">€0</div>
+                    <div class="stat-subtext">Totale anno</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Utile Netto</div>
+                    <div class="stat-value" id="netProfit">€0</div>
+                    <div class="stat-subtext">Dopo tasse e spese</div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">📊 Statistiche Rapide</h3>
+                <div class="stats-grid">
+                    <div>
+                        <div class="stat-label">Prenotazioni Totali</div>
+                        <div class="stat-value" style="font-size: 24px;" id="totalBookings">0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Prezzo Medio per Notte</div>
+                        <div class="stat-value" style="font-size: 24px;" id="avgPrice">€0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Commissioni Totali</div>
+                        <div class="stat-value" style="font-size: 24px; color: var(--color-danger);" id="totalCommissions">€0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Spese Pulizia</div>
+                        <div class="stat-value" style="font-size: 24px; color: var(--color-warning);" id="totalCleaning">€0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 style="margin-bottom: 15px; color: var(--color-primary);">📋 Ultime Prenotazioni</h3>
+                <div id="recentBookings"></div>
+            </div>
+        </div>
+
+        <!-- PRENOTAZIONI -->
+        <div id="prenotazioni" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">➕ Nuova Prenotazione</h3>
+                <form id="bookingForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="guestName">Nominativo</label>
+                            <input type="text" id="guestName" required placeholder="Nome ospite">
+                        </div>
+                        <div class="form-group">
+                            <label for="guestEmail">Email</label>
+                            <input type="email" id="guestEmail" placeholder="email@esempio.it">
+                        </div>
+                        <div class="form-group">
+                            <label for="guestPhone">Telefono</label>
+                            <input type="tel" id="guestPhone" placeholder="+39 123 456 7890">
+                        </div>
+                        <div class="form-group">
+                            <label for="numGuests">Numero Ospiti</label>
+                            <input type="number" id="numGuests" min="1" max="10" value="2" placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="checkIn">Check-in</label>
+                            <input type="date" id="checkIn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkOut">Check-out</label>
+                            <input type="date" id="checkOut" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="platform">Piattaforma</label>
+                            <select id="platform" required onchange="calculateProfit()">
+                                <option value="Booking">Booking (30%)</option>
+                                <option value="Airbnb">Airbnb (15.5%)</option>
+                                <option value="Diretta">Diretta (0%)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Prezzo Totale €</label>
+                            <input type="number" id="price" required min="0" step="0.01" placeholder="750" oninput="calculateProfit()">
+                        </div>
+                        <div class="form-group">
+                            <label>💰 Profitto Netto Stimato</label>
+                            <div id="estimatedProfit" style="font-size: 20px; font-weight: 700; color: var(--color-success); padding: 10px 14px; background: #f0fdf4; border-radius: 8px; border: 2px solid #bbf7d0;">
+                                €0.00
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cleaning">Pulizia €</label>
+                            <input type="number" id="cleaning" required min="0" step="0.01" value="60" placeholder="60" oninput="calculateProfit()">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="notes">Note</label>
+                        <textarea id="notes" rows="2" placeholder="Note aggiuntive (opzionale)"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">💾 Salva Prenotazione</button>
+                </form>
+            </div>
+
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">📋 Tutte le Prenotazioni</h3>
+                <div style="overflow-x: auto;">
+                    <table id="bookingsTable">
+                        <thead>
+                            <tr>
+                                <th>Nominativo</th>
+                                <th>Contatti</th>
+                                <th>Ospiti</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Notti</th>
+                                <th>Piattaforma</th>
+                                <th>Prezzo Lordo</th>
+                                <th>Commissione</th>
+                                <th>Incasso Netto</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDARIO -->
+        <div id="calendario" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">🔄 Sincronizzazione iCal</h3>
+                <div class="alert alert-info">
+                    <strong>Come trovare i link iCal:</strong><br>
+                    • <strong>Booking.com:</strong> Extranet → Calendario → Sincronizza calendario → Esporta<br>
+                    • <strong>Airbnb:</strong> Calendario → Disponibilità → Sincronizza calendari → Esporta calendario
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="icalBooking">Link iCal Booking.com</label>
+                        <input type="url" id="icalBooking" placeholder="https://admin.booking.com/hotel/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="icalAirbnb">Link iCal Airbnb</label>
+                        <input type="url" id="icalAirbnb" placeholder="https://www.airbnb.it/calendar/ical/...">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="syncCalendars()">🔄 Sincronizza Calendari</button>
+                <div id="syncStatus" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="form-card">
+                <div class="month-selector">
+                    <button class="btn btn-secondary" onclick="changeMonth(-1)">‹ Mese Prec.</button>
+                    <h3 id="currentMonth">Marzo 2026</h3>
+                    <button class="btn btn-secondary" onclick="changeMonth(1)">Mese Succ. ›</button>
+                </div>
+                
+                <div class="alert alert-info">
+                    <strong>Legenda:</strong> 🔵 Blu = Prenotazioni inserite | 🟣 Viola = Sincronizzate da piattaforme | ⚪ Grigio = Disponibili
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="calendar-header">Lun</div>
+                    <div class="calendar-header">Mar</div>
+                    <div class="calendar-header">Mer</div>
+                    <div class="calendar-header">Gio</div>
+                    <div class="calendar-header">Ven</div>
+                    <div class="calendar-header">Sab</div>
+                    <div class="calendar-header">Dom</div>
+                </div>
+                <div id="calendarDays" class="calendar-grid">
+                </div>
+            </div>
+        </div>
+
+        <!-- FINANZA -->
+        <div id="finanza" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">💰 Riepilogo Finanziario</h3>
+                
+                <div class="stats-grid" style="margin-bottom: 30px;">
+                    <div>
+                        <div class="stat-label">Incassi Lordi</div>
+                        <div class="stat-value" style="font-size: 28px; color: var(--color-success);" id="finRevenue">€0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Commissioni Totali</div>
+                        <div class="stat-value" style="font-size: 28px; color: var(--color-danger);" id="finCommissions">€0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Spese Operative</div>
+                        <div class="stat-value" style="font-size: 28px; color: var(--color-warning);" id="finExpenses">€0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Cedolare Secca 21%</div>
+                        <div class="stat-value" style="font-size: 28px; color: var(--color-danger);" id="finTax">€0</div>
+                    </div>
+                </div>
+
+                <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="margin-bottom: 15px;">💡 Dettaglio Calcoli</h4>
+                    <p style="margin-bottom: 8px;"><strong>Guadagno Netto (prima tasse):</strong> <span id="finNetBeforeTax">€0</span></p>
+                    <p style="margin-bottom: 8px;"><strong>Cedolare Secca (21% su lordo):</strong> <span id="finTaxAmount">€0</span></p>
+                    <p style="font-size: 18px; font-weight: 700; color: var(--color-success); margin-top: 15px;">
+                        <strong>UTILE NETTO FINALE:</strong> <span id="finFinalProfit">€0</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">📊 Spese Fisse Mensili</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Utenze (luce, gas, acqua)</label>
+                        <input type="number" id="expUtenze" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Internet</label>
+                        <input type="number" id="expInternet" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Assicurazione (annuale)</label>
+                        <input type="number" id="expAssicurazione" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Manutenzione ordinaria</label>
+                        <input type="number" id="expManutenzione" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Biancheria e forniture</label>
+                        <input type="number" id="expBiancheria" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Commercialista (annuale)</label>
+                        <input type="number" id="expCommercialista" value="0" min="0" step="1">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="updateExpenses()">💾 Aggiorna Spese</button>
+            </div>
+        </div>
+
+        <!-- REPORT -->
+        <div id="report" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px; color: var(--color-primary);">📈 Report Annuale 2026</h3>
+                
+                <div class="alert alert-success">
+                    <strong>Report generato con successo!</strong> Visualizza qui sotto i dati aggregati dell'anno.
+                </div>
+
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mese</th>
+                                <th>Notti</th>
+                                <th>Tasso Occ. %</th>
+                                <th>Incasso Lordo</th>
+                                <th>Commissioni</th>
+                                <th>Guadagno Netto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthlyReportTable">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="export-section">
+                    <button class="btn btn-primary" onclick="exportToExcel()">📥 Esporta Excel</button>
+                    <button class="btn btn-secondary" onclick="printReport()">🖨️ Stampa Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bookings = [];
+
+        let syncedBookings = [];
+
+        let expenses = {
+            utenze: 0,
+            internet: 0,
+            assicurazione: 0,
+            manutenzione: 0,
+            biancheria: 0,
+            commercialista: 0
+        };
+
+        let currentMonthView = 2;
+        let currentYearView = 2026;
+
+        const platformCommissions = {
+            'Booking': 30,
+            'Airbnb': 15.5,
+            'Diretta': 0
+        };
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'dashboard') updateDashboard();
+            if (tabName === 'prenotazioni') renderBookingsTable();
+            if (tabName === 'calendario') renderCalendar();
+            if (tabName === 'finanza') updateFinance();
+            if (tabName === 'report') generateReport();
+        }
+
+        function calculateNights(checkIn, checkOut) {
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            return diff;
+        }
+
+        function calculateCommission(price, platform) {
+            const rate = platformCommissions[platform];
+            return (price * rate / 100).toFixed(2);
+        }
+
+        function calculateNetIncome(price, commission, cleaning) {
+            return (price - commission - cleaning).toFixed(2);
+        }
+
+        function calculateProfit() {
+            const priceInput = document.getElementById('price');
+            const cleaningInput = document.getElementById('cleaning');
+            const platformSelect = document.getElementById('platform');
+            const profitDiv = document.getElementById('estimatedProfit');
+
+            const price = parseFloat(priceInput.value) || 0;
+            const cleaning = parseFloat(cleaningInput.value) || 0;
+            const platform = platformSelect.value;
+
+            if (price > 0) {
+                const commission = parseFloat(calculateCommission(price, platform));
+                const netIncome = price - commission - cleaning;
+                const tax = price * 0.21;
+                const finalProfit = netIncome - tax;
+
+                const commissionRate = platformCommissions[platform];
+                
+                profitDiv.innerHTML = `
+                    <div style="font-size: 24px; margin-bottom: 8px;">€${finalProfit.toFixed(2)}</div>
+                    <div style="font-size: 11px; color: var(--color-text-light); font-weight: 400; line-height: 1.4;">
+                        Dettaglio: €${price.toFixed(2)} - €${commission.toFixed(2)} (${commissionRate}%) - €${cleaning.toFixed(2)} (pulizia) - €${tax.toFixed(2)} (21% tasse) = <strong>€${finalProfit.toFixed(2)}</strong>
+                    </div>
+                `;
+            } else {
+                profitDiv.innerHTML = '€0.00';
+            }
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const booking = {
+                id: Date.now(),
+                guestName: document.getElementById('guestName').value,
+                guestEmail: document.getElementById('guestEmail').value,
+                guestPhone: document.getElementById('guestPhone').value,
+                numGuests: parseInt(document.getElementById('numGuests').value) || 2,
+                checkIn: document.getElementById('checkIn').value,
+                checkOut: document.getElementById('checkOut').value,
+                platform: document.getElementById('platform').value,
+                price: parseFloat(document.getElementById('price').value),
+                cleaning: parseFloat(document.getElementById('cleaning').value),
+                notes: document.getElementById('notes').value
+            };
+
+            bookings.push(booking);
+            
+            this.reset();
+            
+            alert('✅ Prenotazione aggiunta con successo!');
+            renderBookingsTable();
+            updateDashboard();
+        });
+
+        function renderBookingsTable() {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = '';
+
+            bookings.forEach(booking => {
+                const nights = calculateNights(booking.checkIn, booking.checkOut);
+                const commission = calculateCommission(booking.price, booking.platform);
+                const netIncome = calculateNetIncome(booking.price, commission, booking.cleaning);
+
+                const badgeClass = `badge-${booking.platform.toLowerCase()}`;
+
+                const contactInfo = [];
+                if (booking.guestEmail) contactInfo.push(`📧 ${booking.guestEmail}`);
+                if (booking.guestPhone) contactInfo.push(`📱 ${booking.guestPhone}`);
+                const contacts = contactInfo.length > 0 ? contactInfo.join('<br>') : '<span style="color: var(--color-text-light);">-</span>';
+
+                const row = `
+                    <tr>
+                        <td><strong>${booking.guestName}</strong></td>
+                        <td style="font-size: 12px;">${contacts}</td>
+                        <td style="text-align: center;"><strong>${booking.numGuests || '-'}</strong></td>
+                        <td>${formatDate(booking.checkIn)}</td>
+                        <td>${formatDate(booking.checkOut)}</td>
+                        <td><strong>${nights}</strong></td>
+                        <td><span class="badge ${badgeClass}">${booking.platform}</span></td>
+                        <td>€${booking.price.toFixed(2)}</td>
+                        <td style="color: var(--color-danger);">-€${commission}</td>
+                        <td style="color: var(--color-success); font-weight: 600;">€${netIncome}</td>
+                        <td>
+                            <button class="btn btn-danger btn-small" onclick="deleteBooking(${booking.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function deleteBooking(id) {
+            if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
+                bookings = bookings.filter(b => b.id !== id);
+                renderBookingsTable();
+                updateDashboard();
+                alert('✅ Prenotazione eliminata!');
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function updateDashboard() {
+            let totalNights = 0;
+            let totalRevenue = 0;
+            let totalCommissions = 0;
+            let totalCleaning = 0;
+
+            bookings.forEach(booking => {
+                const nights = calculateNights(booking.checkIn, booking.checkOut);
+                const commission = parseFloat(calculateCommission(booking.price, booking.platform));
+                
+                totalNights += nights;
+                totalRevenue += booking.price;
+                totalCommissions += commission;
+                totalCleaning += booking.cleaning;
+            });
+
+            const occupancyRate = ((totalNights / 365) * 100).toFixed(1);
+            const avgPrice = bookings.length > 0 ? (totalRevenue / totalNights).toFixed(2) : 0;
+
+            const monthlyExpenses = (expenses.utenze + expenses.internet + expenses.manutenzione + expenses.biancheria) * 12;
+            const yearlyExpenses = monthlyExpenses + expenses.assicurazione + expenses.commercialista;
+            const totalExpenses = totalCommissions + totalCleaning + yearlyExpenses;
+
+            const netBeforeTax = totalRevenue - totalCommissions - totalCleaning - yearlyExpenses;
+            const tax = totalRevenue * 0.21;
+            const netProfit = totalRevenue - totalCommissions - totalCleaning - yearlyExpenses - tax;
+
+            document.getElementById('totalNights').textContent = totalNights;
+            document.getElementById('occupancyRate').textContent = occupancyRate + '%';
+            document.getElementById('totalRevenue').textContent = '€' + totalRevenue.toFixed(0);
+            document.getElementById('netProfit').textContent = '€' + (netProfit > 0 ? netProfit.toFixed(0) : netProfit.toFixed(0));
+
+            document.getElementById('totalBookings').textContent = bookings.length;
+            document.getElementById('avgPrice').textContent = '€' + avgPrice;
+            document.getElementById('totalCommissions').textContent = '€' + totalCommissions.toFixed(0);
+            document.getElementById('totalCleaning').textContent = '€' + totalCleaning.toFixed(0);
+
+            checkUpcomingCheckins();
+
+            const recentDiv = document.getElementById('recentBookings');
+            if (bookings.length === 0) {
+                recentDiv.innerHTML = '<p style="color: var(--color-text-light);">Nessuna prenotazione registrata.</p>';
+            } else {
+                const recent = bookings.slice(-3).reverse();
+                recentDiv.innerHTML = recent.map(b => {
+                    const badgeClass = `badge-${b.platform.toLowerCase()}`;
+                    return `
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+                            <div>
+                                <strong>${b.guestName}</strong> - ${formatDate(b.checkIn)} → ${formatDate(b.checkOut)}
+                                <span class="badge ${badgeClass}" style="margin-left: 8px;">${b.platform}</span>
+                            </div>
+                            <div style="font-weight: 600; color: var(--color-success);">€${b.price}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function renderCalendar() {
+            const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                              'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            
+            document.getElementById('currentMonth').textContent = `${monthNames[currentMonthView]} ${currentYearView}`;
+
+            const firstDay = new Date(currentYearView, currentMonthView, 1);
+            const lastDay = new Date(currentYearView, currentMonthView + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            for (let i = 0; i < startDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarDays.appendChild(emptyDay);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYearView}-${String(currentMonthView + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const isSynced = syncedBookings.some(booking => {
+                    const checkIn = new Date(booking.checkIn);
+                    const checkOut = new Date(booking.checkOut);
+                    const currentDate = new Date(dateStr);
+                    return currentDate >= checkIn && currentDate < checkOut;
+                });
+
+                const isOccupied = bookings.some(booking => {
+                    const checkIn = new Date(booking.checkIn);
+                    const checkOut = new Date(booking.checkOut);
+                    const currentDate = new Date(dateStr);
+                    return currentDate >= checkIn && currentDate < checkOut;
+                });
+
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `calendar-day ${isSynced ? 'synced' : (isOccupied ? 'occupied' : '')}`;
+                dayDiv.innerHTML = `<div style="font-weight: 600;">${day}</div>`;
+                
+                if (isSynced) {
+                    const booking = syncedBookings.find(b => {
+                        const checkIn = new Date(b.checkIn);
+                        const checkOut = new Date(b.checkOut);
+                        const currentDate = new Date(dateStr);
+                        return currentDate >= checkIn && currentDate < checkOut;
+                    });
+                    if (booking) {
+                        dayDiv.innerHTML += `<div style="font-size: 10px; margin-top: 4px;">🔄 ${booking.guestName}</div>`;
+                    }
+                } else if (isOccupied) {
+                    const booking = bookings.find(b => {
+                        const checkIn = new Date(b.checkIn);
+                        const checkOut = new Date(b.checkOut);
+                        const currentDate = new Date(dateStr);
+                        return currentDate >= checkIn && currentDate < checkOut;
+                    });
+                    if (booking) {
+                        dayDiv.innerHTML += `<div style="font-size: 10px; margin-top: 4px;">${booking.guestName.split(' ')[0]}</div>`;
+                    }
+                }
+
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+
+        function changeMonth(delta) {
+            currentMonthView += delta;
+            if (currentMonthView > 11) {
+                currentMonthView = 0;
+                currentYearView++;
+            } else if (currentMonthView < 0) {
+                currentMonthView = 11;
+                currentYearView--;
+            }
+            renderCalendar();
+        }
+
+        function updateFinance() {
+            let totalRevenue = 0;
+            let totalCommissions = 0;
+            let totalCleaning = 0;
+
+            bookings.forEach(booking => {
+                const commission = parseFloat(calculateCommission(booking.price, booking.platform));
+                totalRevenue += booking.price;
+                totalCommissions += commission;
+                totalCleaning += booking.cleaning;
+            });
+
+            const monthlyExpenses = (expenses.utenze + expenses.internet + expenses.manutenzione + expenses.biancheria) * 12;
+            const yearlyExpenses = monthlyExpenses + expenses.assicurazione + expenses.commercialista;
+
+            const netBeforeTax = totalRevenue - totalCommissions - totalCleaning - yearlyExpenses;
+            const tax = totalRevenue * 0.21;
+            const finalProfit = totalRevenue - totalCommissions - totalCleaning - yearlyExpenses - tax;
+
+            document.getElementById('finRevenue').textContent = '€' + totalRevenue.toFixed(2);
+            document.getElementById('finCommissions').textContent = '€' + totalCommissions.toFixed(2);
+            document.getElementById('finExpenses').textContent = '€' + yearlyExpenses.toFixed(2);
+            document.getElementById('finTax').textContent = '€' + tax.toFixed(2);
+            document.getElementById('finNetBeforeTax').textContent = '€' + netBeforeTax.toFixed(2);
+            document.getElementById('finTaxAmount').textContent = '€' + tax.toFixed(2);
+            document.getElementById('finFinalProfit').textContent = '€' + finalProfit.toFixed(2);
+
+            document.getElementById('expUtenze').value = expenses.utenze;
+            document.getElementById('expInternet').value = expenses.internet;
+            document.getElementById('expAssicurazione').value = expenses.assicurazione;
+            document.getElementById('expManutenzione').value = expenses.manutenzione;
+            document.getElementById('expBiancheria').value = expenses.biancheria;
+            document.getElementById('expCommercialista').value = expenses.commercialista;
+        }
+
+        function updateExpenses() {
+            expenses.utenze = parseFloat(document.getElementById('expUtenze').value);
+            expenses.internet = parseFloat(document.getElementById('expInternet').value);
+            expenses.assicurazione = parseFloat(document.getElementById('expAssicurazione').value);
+            expenses.manutenzione = parseFloat(document.getElementById('expManutenzione').value);
+            expenses.biancheria = parseFloat(document.getElementById('expBiancheria').value);
+            expenses.commercialista = parseFloat(document.getElementById('expCommercialista').value);
+            
+            alert('✅ Spese aggiornate con successo!');
+            updateFinance();
+            updateDashboard();
+        }
+
+        function generateReport() {
+            const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                              'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            
+            const monthlyData = Array(12).fill(null).map((_, i) => ({
+                month: monthNames[i],
+                nights: 0,
+                revenue: 0,
+                commissions: 0,
+                cleaning: 0
+            }));
+
+            bookings.forEach(booking => {
+                const month = new Date(booking.checkIn).getMonth();
+                const nights = calculateNights(booking.checkIn, booking.checkOut);
+                const commission = parseFloat(calculateCommission(booking.price, booking.platform));
+
+                monthlyData[month].nights += nights;
+                monthlyData[month].revenue += booking.price;
+                monthlyData[month].commissions += commission;
+                monthlyData[month].cleaning += booking.cleaning;
+            });
+
+            const tbody = document.getElementById('monthlyReportTable');
+            tbody.innerHTML = '';
+
+            monthlyData.forEach(data => {
+                const daysInMonth = new Date(2026, monthNames.indexOf(data.month) + 1, 0).getDate();
+                const occupancy = data.nights > 0 ? ((data.nights / daysInMonth) * 100).toFixed(1) : 0;
+                const netIncome = data.revenue - data.commissions - data.cleaning;
+
+                const row = `
+                    <tr>
+                        <td><strong>${data.month}</strong></td>
+                        <td>${data.nights}</td>
+                        <td>${occupancy}%</td>
+                        <td>€${data.revenue.toFixed(2)}</td>
+                        <td style="color: var(--color-danger);">€${data.commissions.toFixed(2)}</td>
+                        <td style="color: var(--color-success); font-weight: 600;">€${netIncome.toFixed(2)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function exportToExcel() {
+            let csv = 'Nominativo,Check-in,Check-out,Notti,Piattaforma,Prezzo Lordo,Commissione,Pulizia,Incasso Netto\n';
+            
+            bookings.forEach(booking => {
+                const nights = calculateNights(booking.checkIn, booking.checkOut);
+                const commission = calculateCommission(booking.price, booking.platform);
+                const netIncome = calculateNetIncome(booking.price, commission, booking.cleaning);
+                
+                csv += `${booking.guestName},${booking.checkIn},${booking.checkOut},${nights},${booking.platform},${booking.price},${commission},${booking.cleaning},${netIncome}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'prenotazioni_casa_vacanze.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        async function syncCalendars() {
+            const bookingUrl = document.getElementById('icalBooking').value.trim();
+            const airbnbUrl = document.getElementById('icalAirbnb').value.trim();
+            const statusDiv = document.getElementById('syncStatus');
+
+            if (!bookingUrl && !airbnbUrl) {
+                statusDiv.innerHTML = '<div class="alert" style="background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626;">⚠️ Inserisci almeno un link iCal per sincronizzare.</div>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<div class="alert alert-info">🔄 Sincronizzazione in corso...</div>';
+            
+            syncedBookings = [];
+            let successCount = 0;
+            let errorMessages = [];
+
+            try {
+                if (bookingUrl) {
+                    try {
+                        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(bookingUrl)}`);
+                        const icalData = await response.text();
+                        const bookingsFromIcal = parseICalData(icalData, 'Booking');
+                        syncedBookings = syncedBookings.concat(bookingsFromIcal);
+                        successCount++;
+                    } catch (error) {
+                        errorMessages.push('Booking.com: Errore di sincronizzazione');
+                    }
+                }
+
+                if (airbnbUrl) {
+                    try {
+                        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(airbnbUrl)}`);
+                        const icalData = await response.text();
+                        const bookingsFromIcal = parseICalData(icalData, 'Airbnb');
+                        syncedBookings = syncedBookings.concat(bookingsFromIcal);
+                        successCount++;
+                    } catch (error) {
+                        errorMessages.push('Airbnb: Errore di sincronizzazione');
+                    }
+                }
+
+                if (successCount > 0) {
+                    statusDiv.innerHTML = `<div class="alert alert-success">✅ Sincronizzazione completata! ${syncedBookings.length} prenotazioni importate da ${successCount} piattaforma/e.</div>`;
+                    if (errorMessages.length > 0) {
+                        statusDiv.innerHTML += `<div class="alert" style="background: #fef3c7; color: #92400e; border-left: 4px solid #d97706; margin-top: 10px;">⚠️ ${errorMessages.join(', ')}</div>`;
+                    }
+                } else {
+                    statusDiv.innerHTML = '<div class="alert" style="background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626;">❌ Impossibile sincronizzare i calendari. Verifica i link iCal.</div>';
+                }
+
+                renderCalendar();
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="alert" style="background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626;">❌ Errore durante la sincronizzazione. I link iCal potrebbero non essere accessibili dal browser per motivi di sicurezza.</div>';
+            }
+        }
+
+        function parseICalData(icalText, platform) {
+            const bookings = [];
+            const events = icalText.split('BEGIN:VEVENT');
+
+            for (let i = 1; i < events.length; i++) {
+                const event = events[i];
+                
+                const summaryMatch = event.match(/SUMMARY:(.*)/);
+                const dtStartMatch = event.match(/DTSTART[;:](\d{8})/);
+                const dtEndMatch = event.match(/DTEND[;:](\d{8})/);
+
+                if (dtStartMatch && dtEndMatch) {
+                    const summary = summaryMatch ? summaryMatch[1].trim().replace(/\\,/g, ',') : 'Prenotazione';
+                    const startDate = dtStartMatch[1];
+                    const endDate = dtEndMatch[1];
+
+                    const checkIn = `${startDate.substring(0, 4)}-${startDate.substring(4, 6)}-${startDate.substring(6, 8)}`;
+                    const checkOut = `${endDate.substring(0, 4)}-${endDate.substring(4, 6)}-${endDate.substring(6, 8)}`;
+
+                    let guestName = summary;
+                    if (summary.includes('Reserved') || summary.includes('Riservato')) {
+                        guestName = 'Ospite ' + platform;
+                    } else if (summary.includes('Not available') || summary.includes('Non disponibile')) {
+                        guestName = 'Bloccato ' + platform;
+                    }
+
+                    bookings.push({
+                        id: Date.now() + i,
+                        guestName: guestName,
+                        checkIn: checkIn,
+                        checkOut: checkOut,
+                        platform: platform,
+                        synced: true
+                    });
+                }
+            }
+
+            return bookings;
+        }
+
+        function checkUpcomingCheckins() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const threeDaysFromNow = new Date(today);
+            threeDaysFromNow.setDate(today.getDate() + 3);
+
+            const upcomingBookings = bookings.filter(booking => {
+                const checkInDate = new Date(booking.checkIn);
+                checkInDate.setHours(0, 0, 0, 0);
+                return checkInDate >= today && checkInDate <= threeDaysFromNow;
+            }).sort((a, b) => new Date(a.checkIn) - new Date(b.checkIn));
+
+            const alertDiv = document.getElementById('upcomingCheckinsAlert');
+            const listDiv = document.getElementById('upcomingCheckinsList');
+            const notificationBadge = document.getElementById('dashboardNotifications');
+
+            if (upcomingBookings.length > 0) {
+                alertDiv.style.display = 'block';
+                notificationBadge.style.display = 'flex';
+                notificationBadge.textContent = upcomingBookings.length;
+
+                listDiv.innerHTML = upcomingBookings.map(booking => {
+                    const checkInDate = new Date(booking.checkIn);
+                    const daysUntil = Math.ceil((checkInDate - today) / (1000 * 60 * 60 * 24));
+                    const urgencyText = daysUntil === 0 ? '🔴 OGGI' : daysUntil === 1 ? '🟠 Domani' : `🟡 Tra ${daysUntil} giorni`;
+                    
+                    const contactInfo = [];
+                    if (booking.guestEmail) contactInfo.push(`📧 ${booking.guestEmail}`);
+                    if (booking.guestPhone) contactInfo.push(`📱 ${booking.guestPhone}`);
+                    const contacts = contactInfo.length > 0 ? '<br><span style="font-size: 12px;">' + contactInfo.join(' • ') + '</span>' : '';
+
+                    return `
+                        <div style="padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid var(--color-warning);">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <strong style="font-size: 16px;">${booking.guestName}</strong> ${booking.numGuests ? `<span style="color: var(--color-text-light);">(${booking.numGuests} ospiti)</span>` : ''}
+                                    ${contacts}
+                                    <div style="margin-top: 4px; color: var(--color-text-light); font-size: 13px;">
+                                        Check-in: ${formatDate(booking.checkIn)} • Check-out: ${formatDate(booking.checkOut)}
+                                    </div>
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px;">${urgencyText}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                alertDiv.style.display = 'none';
+                notificationBadge.style.display = 'none';
+            }
+        }
+
+        updateDashboard();
+    </script>
+</body>
+</html>
