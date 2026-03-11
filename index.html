@@ -955,6 +955,9 @@
             if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
                 bookings = bookings.filter(b => b.id !== id);
                 renderBookingsTable();
+                        updateDashboard();
+                        alert('✅ Prenotazione eliminata!');
+                    }
                 
                         function editBooking(id) {
             const booking = bookings.find(b => b.id === id);
