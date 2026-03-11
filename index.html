@@ -624,14 +624,7 @@
                         <label for="notes">Note</label>
                         <textarea id="notes" rows="2" placeholder="Note aggiuntive (opzionale)"></textarea>
                     </div>
-                    <bu
-                        
-                                        <div style="margin-top: 20px; padding: 16px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid var(--color-primary);">
-                    <strong style="color: var(--color-primary);">📥 Importa da Excel</strong>
-                    <p style="font-size: 13px; color: var(--color-text-light); margin: 8px 0;">Carica il file Excel esportato da Booking o Airbnb per importare automaticamente le prenotazioni</p>
-                    <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="margin: 10px 0;">
-                    <button type="button" class="btn btn-secondary" onclick="importFromExcel()">📤 Importa Prenotazioni</button>
-                </div>tton type="submit" class="btn btn-primary">💾 Salva Prenotazione</button>
+                <button type="submit" class="btn btn-primary">💾 Salva Prenotazione</button>                        
                 </form>
             </div>
 
@@ -1438,64 +1431,6 @@
 
         updateDashboard();
 
-                async function importFromExcel() {
-            const fileInput = document.getElementById('excelFileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert('⚠️ Seleziona un file Excel prima di importare!');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
-                    
-                    let imported = 0;
-                    for (let i = 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        if (row.length === 0) continue;
-                        
-                        const booking = {
-                            id: Date.now() + i,
-                            guestName: row[0] || 'Ospite',
-                            guestEmail: row[1] || '',
-                            guestPhone: row[2] || '',
-                            numGuests: parseInt(row[3]) || 2,
-                            checkIn: row[4] || '',
-                            checkOut: row[5] || '',
-                            platform: row[6] || 'Booking',
-                            price: parseFloat(row[7]) || 0,
-                            cleaning: parseFloat(row[8]) || 60,
-                            notes: row[9] || ''
-                        };
-                        
-                        if (booking.checkIn && booking.checkOut && booking.price > 0) {
-                            bookings.push(booking);
-                            imported++;
-                        }
-                    }
-                    
-                    if (imported > 0) {
-                        alert(`✅ Importate ${imported} prenotazioni con successo!`);
-                        renderBookingsTable();
-                        updateDashboard();
-                        fileInput.value = '';
-                    } else {
-                        alert('⚠️ Nessuna prenotazione valida trovata nel file.');
-                    }
-                } catch (error) {
-                    alert('❌ Errore durante l\'importazione. Verifica che il file sia in formato Excel corretto.');
-                    console.error(error);
-                }
-            };
-            
-            reader.readAsArrayBuffer(file);
-        }
     </script>
 </body>
 </html>
